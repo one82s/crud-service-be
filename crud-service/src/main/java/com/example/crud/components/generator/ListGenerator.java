@@ -31,15 +31,18 @@ public class ListGenerator {
 			int couponCode;
 			boolean isAdded;
 			String generatedCode;
-			do {
-				couponCode = ThreadLocalRandom.current().nextInt(offer.getSeqNumberStart(),
-						offer.getSeqNumberEnd() + 1);
-				generatedCode = offer.getCode() + couponCode;
-				isAdded = generatedCouponCodes.add(generatedCode);
-			} while (!isAdded); // Ensure the coupon code is unique
+			couponCode = ThreadLocalRandom.current().nextInt(offer.getSeqNumberStart(),
+					offer.getSeqNumberEnd() + 1);
+			generatedCode = offer.getCode() + couponCode;
 
 			synchronized (newCodes) {
 				newCodes.add(generatedCode);
+			}
+			synchronized(generatedCouponCodes) {
+				isAdded = generatedCouponCodes.contains(generatedCode);
+				if(!isAdded) {
+					generatedCouponCodes.add(generatedCode);
+				}
 			}
 			coupons.add(buildCouponFromGeneratedCode(offer));
 		});
@@ -70,8 +73,8 @@ public class ListGenerator {
 		offer.setDiscountAmount(31.66);
 		offer.setDiscountPercent(54);
 		offer.setSeqNumberStart(1000);
-		offer.setSeqNumberEnd(9000);
-		offer.setCouponCount(10000);
+		offer.setSeqNumberEnd(10000);
+		offer.setCouponCount(9000000);
 	}
 
 	
@@ -82,6 +85,7 @@ public class ListGenerator {
 			int couponCode = (int) (Math.random() * (offer.getSeqNumberEnd() - offer.getSeqNumberStart() + 1)
 					+ offer.getSeqNumberStart());
 //			System.out.println("Generated code per line: " + offerCode + couponCode);
+//			System.out.println("Generated couponCode per line: " + couponCode);
 			generatedCodes.add(offerCode + couponCode);
 
 		}
