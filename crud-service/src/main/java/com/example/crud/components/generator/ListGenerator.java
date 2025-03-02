@@ -32,7 +32,7 @@ public class ListGenerator {
 			boolean isAdded;
 			String generatedCode;
 			couponCode = ThreadLocalRandom.current().nextInt(offer.getSeqNumberStart(),
-					offer.getSeqNumberEnd() + 1);
+					offer.getSeqNumberEnd() - offer.getSeqNumberStart() + 1);
 			generatedCode = offer.getCode() + couponCode;
 
 			synchronized (newCodes) {
